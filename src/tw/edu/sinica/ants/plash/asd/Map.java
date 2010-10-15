@@ -63,6 +63,9 @@ public class Map extends MapActivity {
 	    /* 設定預設的放大層級 */
 	    zoomLevel = 17; 
 	    mMapController.setZoom(zoomLevel); 
+	    
+        /*開啟Zoomlevel button*/
+        mMapView.setBuiltInZoomControls(true);
 
 	    /* Provider初始化 */
 	    mLocationManager = (LocationManager)

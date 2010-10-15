@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+	android:id="@+id/widget2"
+  	android:layout_width="fill_parent"
+  	android:layout_height="fill_parent"
+  	android:background="@drawable/black"
+  	xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical">
+  <Gallery 
+    android:id="@+id/gallery"
+    android:background="@drawable/black"
+    android:layout_width="fill_parent"
+    android:layout_height="320px"
+    android:gravity="center_vertical"
+    android:spacing="16dp"
+  />
+	<LinearLayout android:id="@+id/LinearLayout03" android:layout_width="wrap_content" android:layout_height="wrap_content">
+		<ImageButton android:id="@+id/MapMode3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:cropToPadding="true" android:background="@drawable/ic_menu_mapmode"></ImageButton>
+		<ImageButton android:id="@+id/CameraMode3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/ic_menu_camera"></ImageButton>
+		<ImageButton android:id="@+id/GalleryMode3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/ic_menu_gallery_b"></ImageButton>		
+	</LinearLayout>   
+</LinearLayout>

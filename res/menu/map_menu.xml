@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+  xmlns:android="http://schemas.android.com/apk/res/android">
+<item android:title="地圖顯示模式" android:id="@+id/map_mode"></item>
+<item android:title="設定User ID" android:id="@+id/set_userid"><menu><group android:checkableBehavior="single" android:id="@+id/userid"><item android:title="131" android:id="@+id/user131" android:checked="true"></item>
+<item android:title="132" android:id="@+id/user132" android:checked="false"></item>
+<item android:title="133" android:id="@+id/user133" android:checked="false"></item>
+<item android:title="134" android:id="@+id/user134" android:checked="false"></item>
+<item android:title="135" android:id="@+id/user135" android:checked="false"></item>
+</group>
+</menu>
+</item>
+<item android:title="關於..." android:id="@+id/about"></item>
+</menu>

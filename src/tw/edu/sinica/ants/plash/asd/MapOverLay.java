@@ -78,4 +78,4 @@ public class MapOverLay extends Overlay
     } 
     return super.draw(canvas, mapView, shadow, when); 
   } 
-} 
+}

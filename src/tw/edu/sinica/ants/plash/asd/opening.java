@@ -124,7 +124,7 @@ public class opening extends BaseGameActivity implements IOnSceneTouchListener {
 		if(pSceneTouchEvent.getAction() == MotionEvent.ACTION_DOWN) {
             /* new一個Intent物件，並指定要啟動的class */
             Intent intent = new Intent();
-        	  intent.setClass(opening.this, AR.class);
+        	  intent.setClass(opening.this, map_view.class);
         	  
         	  /* 呼叫一個新的Activity */
         	  startActivity(intent);

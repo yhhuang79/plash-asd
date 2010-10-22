@@ -13,35 +13,44 @@ import java.util.Date;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-public class AR extends Activity {
+public class camera_view extends Activity {
 	
 	//相機
 	private SurfaceView sv;
 	private SurfaceHolder sh;
-
 	private Camera camera;
-	  
+	
+	/*建立一個全域的類別成員變數，型別為ProgressDialog物件*/
+	public ProgressDialog myDialog = null;
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.camera);
+        // fullscreen mode 
+        requestWindowFeature(Window.FEATURE_NO_TITLE); 
+     
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN , 
+                       WindowManager.LayoutParams.FLAG_FULLSCREEN );
+
+        setContentView(R.layout.camera_view);
 
         //設定相機
         sv = (SurfaceView)findViewById(R.id.sv);
@@ -49,53 +58,21 @@ public class AR extends Activity {
         sh.addCallback(new MySHCallback());
         sh.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         
+        //
         /* 以findViewById()取得Button物件，並加入onClickListener */
-        ImageButton b2_2 = (ImageButton) findViewById(R.id.MapMode2);
-        b2_2.setOnClickListener(new Button.OnClickListener()
+        ImageButton Shutter = (ImageButton) findViewById(R.id.Shutter);
+        Shutter.setOnClickListener(new Button.OnClickListener()
         {
           public void onClick(View v)
           {
-            /* new一個Intent物件，並指定要啟動的class */
-            Intent intent = new Intent();
-        	  intent.setClass(AR.this, Map.class);
-        	  
-        	  /* 呼叫一個新的Activity */
-        	  startActivity(intent);
-        	  /* 關閉原本的Activity */
-        	  AR.this.finish();
+          	if (camera != null) 
+        	{
+          		camera.takePicture(null, null, jpeg);
+        	}
           }
         });
-        /* 以findViewById()取得Button物件，並加入onClickListener */
-        ImageButton b2_3 = (ImageButton) findViewById(R.id.GalleryMode2);
-        b2_3.setOnClickListener(new Button.OnClickListener()
-        {
-          public void onClick(View v)
-          {
-            /* new一個Intent物件，並指定要啟動的class */
-            Intent intent = new Intent();
-        	  intent.setClass(AR.this, gallery.class);
-        	  
-        	  /* 呼叫一個新的Activity */
-        	  startActivity(intent);
-        	  /* 關閉原本的Activity */
-        	  AR.this.finish();
-          }
-        });        
+        
     }
-
-    public boolean onKeyDown (int keyCode, KeyEvent event) 
-    {
-    	if (keyCode != KeyEvent.KEYCODE_DPAD_CENTER) 
-    	{
-    		return super.onKeyDown(keyCode, event);
-    	}
-    	if (camera != null) 
-    	{
-    		camera.takePicture(null, null, jpeg);
-    	}
-    	return true;
-    }    
-    
     private PictureCallback jpeg = new PictureCallback() 
     {
     	public void onPictureTaken(byte[] data, Camera camera) 
@@ -116,15 +93,16 @@ public class AR extends Activity {
     			bm.compress(Bitmap.CompressFormat.JPEG, 80, bos);
     			bos.flush();
     			bos.close();
-    			
+
+            	// 上傳照片至Picasa
     			uploadPicasa("http://203.72.144.85/~yuhsiang/upload2.php", 
     					path, filename);
     			
-    			Toast.makeText(AR.this, "照片已存檔",
+    			Toast.makeText(camera_view.this, "照片已存檔",
     					Toast.LENGTH_SHORT).show();
     			camera.startPreview();
     		}catch (Exception e) {
-    			Toast.makeText(AR.this, e.toString(),
+    			Toast.makeText(camera_view.this, e.toString(),
     					Toast.LENGTH_SHORT).show();
     		}
     	}
@@ -135,7 +113,7 @@ public class AR extends Activity {
     		camera = Camera.open();
 
     		if (camera == null) {
-    			Toast.makeText(AR.this, "camera is null",
+    			Toast.makeText(camera_view.this, "camera is null",
     					Toast.LENGTH_SHORT).show();
     			finish();
     			}
@@ -148,7 +126,7 @@ public class AR extends Activity {
     		try {
     			camera.setPreviewDisplay(sh);
     		} catch (Exception e) {
-    			Toast.makeText(AR.this, e.toString(),
+    			Toast.makeText(camera_view.this, e.toString(),
     					Toast.LENGTH_SHORT).show();
     			finish();
     		}
@@ -173,7 +151,7 @@ public class AR extends Activity {
       String boundary = "*****";
       try
       {
-          Toast.makeText(AR.this, actionUrl+"   "+path+uploadFile,Toast.LENGTH_SHORT).show();
+          Toast.makeText(camera_view.this, actionUrl+"   "+path+uploadFile,Toast.LENGTH_SHORT).show();
 
     	  URL url =new URL(actionUrl);
         HttpURLConnection con=(HttpURLConnection)url.openConnection();
@@ -249,7 +227,7 @@ public class AR extends Activity {
     /* 顯示Dialog的method */
     private void showDialog(String mess)
     {
-      new AlertDialog.Builder(AR.this).setTitle("Message")
+      new AlertDialog.Builder(camera_view.this).setTitle("Message")
        .setMessage(mess)
        .setNegativeButton("確定",new DialogInterface.OnClickListener()
        {

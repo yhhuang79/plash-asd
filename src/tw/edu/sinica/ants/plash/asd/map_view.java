@@ -152,7 +152,7 @@ public class map_view extends MapActivity {
         overlayitem[6] = new OverlayItem(point[6],"胡適紀念館", null);
         
         for (int i=0; i<7; i++)
-        	_location[i] = 0;
+        	if(_location[i] < 2) _location[i] = 0;
         
         // 以findViewById()取得Button物件，並加入onClickListener
         final ImageButton Shutter = (ImageButton) findViewById(R.id.Shutter);
@@ -160,7 +160,8 @@ public class map_view extends MapActivity {
         {
           public void onClick(View v)
           {
-              gp1=gp2;
+              gp2 = myLocOverlay.getMyLocation();
+        	  gp1=gp2;
               // 清除Overlay
               resetOverlay();
               // 更新MapView
@@ -194,14 +195,23 @@ public class map_view extends MapActivity {
           public void onClick(View v)
           {
         	  setEndPoint();
-            /* new一個Intent物件，並指定要啟動的class */
-            Intent intent = new Intent();
+              /* new一個Intent物件，並指定要啟動的class */
+              Intent intent = new Intent();
         	  intent.setClass(map_view.this, camera_view.class);
         	  
+        	  /* New 一個 Bundle 物件 */
+        	  Bundle bundle = new Bundle();
+        	  bundle.putIntArray("_location", _location);
+        	  bundle.putInt("_lat", gp2.getLatitudeE6());
+        	  bundle.putInt("_lng", gp2.getLongitudeE6());
+        	  
+        	  intent.putExtras(bundle);
+        	  
         	  /* 呼叫一個新的Activity */
-        	  startActivity(intent);
+        	  //startActivity(intent);
         	  /* 關閉原本的Activity */
-        	  map_view.this.finish();
+        	  //map_view.this.finish();
+        	  startActivityForResult(intent, 0);
           }
         });
         
@@ -222,7 +232,7 @@ public class map_view extends MapActivity {
         	  map_view.this.finish();
           }
         });
-
+        
     }
 
     @Override
@@ -265,8 +275,8 @@ public class map_view extends MapActivity {
 	        		gp2.getLongitudeE6() + "", d.getTime() + "", 3 ); // 上傳測試用
 	        
 	        for(int i=0; i<7; i++)
-	        	if(GetDistance(gp2,overlayitem[i].getPoint())<20)
-	        		_location[i] = 1;
+	        	if(GetDistance(gp2,overlayitem[i].getPoint()) < 10)
+	        		if(_location[i] < 2)_location[i] = 1;
 			PaintItemPoint();
 	        gp1=gp2;
 	      }  
@@ -532,4 +542,20 @@ public class map_view extends MapActivity {
 		  }
 	  }
 
+	  /* 覆寫 onActivityResult()*/
+	  @Override
+	  protected void onActivityResult(int requestCode, int resultCode,
+	                                  Intent data)
+	  {
+	    switch (resultCode)
+	    { 
+	      case RESULT_OK:
+	    	/* 取得資料，並顯示於畫面上 */  
+	        Bundle bunde = data.getExtras();
+	        _location = bunde.getIntArray("_location");
+	        break;       
+	      default: 
+	        break; 
+	     } 
+	   } 
 }

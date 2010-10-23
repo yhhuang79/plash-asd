@@ -8,13 +8,18 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import com.google.android.maps.GeoPoint;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
@@ -37,6 +42,15 @@ public class camera_view extends Activity {
 	private SurfaceHolder sh;
 	private Camera camera;
 	
+	//Location 資料
+	private GeoPoint point[] = new GeoPoint[7];
+	private static int _location[] = new int[7];
+	private GeoPoint gp2;
+	
+	// Intent Activity傳遞資料用
+	Bundle bundle;
+	Intent intent;
+	
 	/*建立一個全域的類別成員變數，型別為ProgressDialog物件*/
 	public ProgressDialog myDialog = null;
 	
@@ -51,14 +65,30 @@ public class camera_view extends Activity {
                        WindowManager.LayoutParams.FLAG_FULLSCREEN );
 
         setContentView(R.layout.camera_view);
+        
+        // 取得 Bundle 物件
+        intent = this.getIntent();
+        bundle = intent.getExtras();
+        _location = bundle.getIntArray("_location");
+        int _lat = bundle.getInt("_lat");
+        int _lng = bundle.getInt("_lng");
+        gp2 = new GeoPoint(_lat,_lng);
+        
+        //設定目標座標
+        point[0] = new GeoPoint(25043830, 121613940);
+        point[1] = new GeoPoint(25042960, 121613190);
+        point[2] = new GeoPoint(25042770, 121616420);
+        point[3] = new GeoPoint(25041040, 121613250);
+        point[4] = new GeoPoint(25041170, 121614190);
+        point[5] = new GeoPoint(25041320, 121614710);
+        point[6] = new GeoPoint(25040660, 121616090);
 
         //設定相機
         sv = (SurfaceView)findViewById(R.id.sv);
         sh = sv.getHolder();
         sh.addCallback(new MySHCallback());
         sh.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        
-        //
+            	
         /* 以findViewById()取得Button物件，並加入onClickListener */
         ImageButton Shutter = (ImageButton) findViewById(R.id.Shutter);
         Shutter.setOnClickListener(new Button.OnClickListener()
@@ -66,13 +96,78 @@ public class camera_view extends Activity {
           public void onClick(View v)
           {
           	if (camera != null) 
-        	{
+        	{	
+          		int j=0;
+          		for(int i=1; i<7; i++)
+          			if(GetDistance(gp2,point[j]) > GetDistance(gp2,point[i])) j = i;
+          		_location[j]=2;
+          		
+          		int total_point=0;
+          		for(int i=0; i<7; i++)
+          			if(_location[i]==1) total_point++;
           		camera.takePicture(null, null, jpeg);
+          		if(total_point==7)
+          		{
+          	        new AlertDialog.Builder(camera_view.this)
+          	        .setTitle("恭喜闖關成功")
+          	        .setMessage("請到資訊所Plash攤位領取闖關紀念品")
+          	        .setPositiveButton("確認",
+          	           new DialogInterface.OnClickListener()
+          	            {
+          	        		public void onClick(DialogInterface dialoginterface, int i)
+          	        		{
+          	        			finish();
+          	        		}
+          	            }
+          	          )
+          	        .show();
+          			
+          		}
         	}
           }
         });
         
+        /* 以findViewById()取得Button物件，並加入onClickListener */
+        ImageButton MapButton = (ImageButton) findViewById(R.id.MapButton01);
+        MapButton.setOnClickListener(new Button.OnClickListener()
+        {
+          public void onClick(View v)
+          {
+              /* new一個Intent物件，並指定要啟動的class */
+              //Intent intent = new Intent();
+        	  //intent.setClass(camera_view.this, map_view.class);
+        	  
+        	  /* New 一個 Bundle 物件 */
+        	  //Bundle bundle = new Bundle();
+        	  //bundle.putIntArray("_location", _location);
+        	  //intent.putExtras(bundle);
+        	  
+        	  /* 呼叫一個新的Activity */
+        	  //startActivity(intent);
+        	  camera_view.this.setResult(RESULT_OK, intent);
+        	  /* 關閉原本的Activity */
+        	  camera_view.this.finish();
+          }
+        });
+        
+        /* 以findViewById()取得Button物件，並加入onClickListener */
+        ImageButton AlbumButton = (ImageButton) findViewById(R.id.AlbumButton03);
+        AlbumButton.setOnClickListener(new Button.OnClickListener()
+        {
+          public void onClick(View v)
+          {
+            /* new一個Intent物件，並指定要啟動的class */
+            Intent intent = new Intent();
+        	  intent.setClass(camera_view.this, album_view.class);
+        	  
+        	  /* 呼叫一個新的Activity */
+        	  startActivity(intent);
+        	  /* 關閉原本的Activity */
+        	  camera_view.this.finish();
+          }
+        });      
     }
+    
     private PictureCallback jpeg = new PictureCallback() 
     {
     	public void onPictureTaken(byte[] data, Camera camera) 
@@ -237,4 +332,33 @@ public class camera_view extends Activity {
        })
        .show();
     }
+    
+	  /* 取得兩點間的距離的method */
+	  public double GetDistance(GeoPoint gp1,GeoPoint gp2)
+	  {
+	    double Lat1r = ConvertDegreeToRadians(gp1.getLatitudeE6()/1E6);
+	    double Lat2r = ConvertDegreeToRadians(gp2.getLatitudeE6()/1E6);
+	    double Long1r= ConvertDegreeToRadians(gp1.getLongitudeE6()/1E6);
+	    double Long2r= ConvertDegreeToRadians(gp2.getLongitudeE6()/1E6);
+	    /* 地球半徑(KM) */
+	    double R = 6371;
+	    double d = Math.acos(Math.sin(Lat1r)*Math.sin(Lat2r)+
+	               Math.cos(Lat1r)*Math.cos(Lat2r)*
+	               Math.cos(Long2r-Long1r))*R;
+	    return d*1000;
+	  }
+
+	  private double ConvertDegreeToRadians(double degrees)
+	  {
+	    return (Math.PI/180)*degrees;
+	  }
+	  
+	  /* format移動距離的method */
+	  public String format(double num)
+	  {
+	    NumberFormat formatter = new DecimalFormat("###");
+	    String s=formatter.format(num);
+	    return s;
+	  }
+	  
 }

@@ -12,7 +12,9 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.Gallery;
+import android.widget.ImageButton;
 
 public class album_view extends Activity {
 	  private Gallery mGallery;  
@@ -73,6 +75,41 @@ public class album_view extends Activity {
 	      {
 	      }     
 	    });	    
+
+        /* 以findViewById()取得Button物件，並加入onClickListener */
+        ImageButton MapButton = (ImageButton) findViewById(R.id.MapButton01);
+        MapButton.setOnClickListener(new Button.OnClickListener()
+        {
+          public void onClick(View v)
+          {
+              /* new一個Intent物件，並指定要啟動的class */
+              Intent intent = new Intent();
+        	  intent.setClass(album_view.this, map_view.class);
+        	  
+        	  /* 呼叫一個新的Activity */
+        	  startActivity(intent);
+        	  /* 關閉原本的Activity */
+        	  album_view.this.finish();
+          }
+        });
+        
+        /* 以findViewById()取得Button物件，並加入onClickListener */
+        ImageButton CameraButton = (ImageButton) findViewById(R.id.CameraButton02);
+        CameraButton.setOnClickListener(new Button.OnClickListener()
+        {
+          public void onClick(View v)
+          {
+            /* new一個Intent物件，並指定要啟動的class */
+            Intent intent = new Intent();
+        	  intent.setClass(album_view.this, camera_view.class);
+        	  
+        	  /* 呼叫一個新的Activity */
+        	  startActivity(intent);
+        	  /* 關閉原本的Activity */
+        	  album_view.this.finish();
+          }
+        });
+	  
 	  }  
 	  
 	  /* 剖析XML取得相片資訊的method */

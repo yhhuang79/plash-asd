@@ -25,23 +25,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.Toast;
+import android.graphics.*;
+import android.location.*;
+import android.os.*;
+import android.view.*;
+import android.widget.*;
+import android.util.*;
 
 public class map_view extends MapActivity {
 	
+	//private MapView mMapView;
 	private MapView mMapView;
 	private MapController mMapController; 
 	private LocationManager mLocationManager;
@@ -64,10 +57,16 @@ public class map_view extends MapActivity {
 	
 	/*建立一個全域的類別成員變數，型別為ProgressDialog物件*/
 	public ProgressDialog myDialog = null;	
+	
+	
+	//testings
+	private Drawable testDrawable;
 	  
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+		  
         super.onCreate(savedInstanceState);
         // ******************************************* 
         // fullscreen mode 
@@ -81,6 +80,7 @@ public class map_view extends MapActivity {
 	    /* 建立MapView物件 */ 
 	    mMapView = (MapView)findViewById(R.id.myMapView1); 
 	    mMapController = mMapView.getController();
+	    
 
 	    /* 設定預設的放大層級 */
 	    zoomLevel = 17; 
@@ -95,7 +95,6 @@ public class map_view extends MapActivity {
 	    
 	    /* MyLocationOverlay */
 	    List<Overlay> overlays = mMapView.getOverlays();
-
 	    myLocOverlay = new MyLocationOverlay(this, mMapView);
 	    myLocOverlay.runOnFirstFix(new Runnable() 
 	    {
@@ -192,49 +191,37 @@ public class map_view extends MapActivity {
         ImageButton CameraButton = (ImageButton) findViewById(R.id.CameraButton02);
         CameraButton.setOnClickListener(new Button.OnClickListener()
         {
-          public void onClick(View v)
-          {
+          public void onClick(View v)         {
         	  setEndPoint();
-              /* new一個Intent物件，並指定要啟動的class */
-              Intent intent = new Intent();
-        	  intent.setClass(map_view.this, camera_view.class);
-        	  
+        	      	  
         	  /* New 一個 Bundle 物件 */
         	  Bundle bundle = new Bundle();
         	  bundle.putIntArray("_location", _location);
         	  bundle.putInt("_lat", gp2.getLatitudeE6());
         	  bundle.putInt("_lng", gp2.getLongitudeE6());
         	  
-        	  intent.putExtras(bundle);
-        	  
-        	  /* 呼叫一個新的Activity */
-        	  //startActivity(intent);
-        	  /* 關閉原本的Activity */
-        	  //map_view.this.finish();
-        	  startActivityForResult(intent, 0);
+        	  (new AsyncTasks(map_view.this, AsyncTasks.load_camera)).execute(bundle);
+
+      	  
+
           }
         });
         
         /* 以findViewById()取得Button物件，並加入onClickListener */
         ImageButton AlbumButton = (ImageButton) findViewById(R.id.AlbumButton03);
         AlbumButton.setOnClickListener(new Button.OnClickListener()
-        {
-          public void onClick(View v)
-          {
-        	  setEndPoint();
-            /* new一個Intent物件，並指定要啟動的class */
-            Intent intent = new Intent();
-        	  intent.setClass(map_view.this, album_view.class);
-        	  
-        	  /* 呼叫一個新的Activity */
-        	  startActivity(intent);
-        	  /* 關閉原本的Activity */
-        	  map_view.this.finish();
-          }
-        });
+	        {
+	          public void onClick(View v)  {  
+	        	 setEndPoint();	      	    
+	      	    (new AsyncTasks(map_view.this, AsyncTasks.load_album)).execute(null);
+	          }//end method override
+	        }//end anonymous class
+        );//end statement
         
-    }
+    }//end onCreate
 
+
+    
     @Override
     protected void onResume() 
     {
@@ -407,6 +394,14 @@ public class map_view extends MapActivity {
 	    myMC.animateTo(gp2); 
 	    myMC.setZoom(zoomLevel); 
 	    mMapView.setSatellite(false); 
+	    
+	    testDrawable = mMapView.getBackground();
+	    Canvas testCanvas = new Canvas();	   
+
+	    if (testDrawable != null) {
+		    testDrawable.draw(testCanvas);
+	    	Log.i("testDrawable is now:",testDrawable.toString() );
+	    }//end if
 	  } 
 	  
 	  /* 取得兩點間的距離的method */
@@ -472,11 +467,10 @@ public class map_view extends MapActivity {
 				e.printStackTrace();
 			}
 			return result;
-		}
+	  }//end method
 	    
 	  /* 向Server取得TripID的method */
-	  public static String getTripID(String userid)
-	  {
+	  public static String getTripID(String userid) {
 		  String tripID = "";
 		  String location = "http://plash.iis.sinica.edu.tw/plash/connPost.action?type=gettripid&userid="
 			  				+ userid;
@@ -500,18 +494,18 @@ public class map_view extends MapActivity {
 			  e1.printStackTrace();
 		  }
 		  return tripID;
-	  }
+	  }//end method
 	  
 	  /* 設定Menu */
 	  @Override
-	  public boolean onCreateOptionsMenu(Menu menu) 
-	  {
+	  public boolean onCreateOptionsMenu(Menu menu)  {
 		    MenuInflater inflater = getMenuInflater();
 		    inflater.inflate(R.menu.map_menu, menu);
 		    return true;
 
-	  }
-
+	  }//end method
+	  
+	  
 	  @Override
 	  public boolean onOptionsItemSelected(MenuItem item) 
 	  {
@@ -544,11 +538,8 @@ public class map_view extends MapActivity {
 
 	  /* 覆寫 onActivityResult()*/
 	  @Override
-	  protected void onActivityResult(int requestCode, int resultCode,
-	                                  Intent data)
-	  {
-	    switch (resultCode)
-	    { 
+	  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    switch (resultCode)	    { 
 	      case RESULT_OK:
 	    	/* 取得資料，並顯示於畫面上 */  
 	        Bundle bunde = data.getExtras();
@@ -556,6 +547,8 @@ public class map_view extends MapActivity {
 	        break;       
 	      default: 
 	        break; 
-	     } 
-	   } 
-}
+	    } //end switch
+	  }//end method 
+	  
+
+}//end class

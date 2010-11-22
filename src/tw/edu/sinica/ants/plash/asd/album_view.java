@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.Bundle;
+import android.os.*;
 import android.util.Xml;
 import android.view.View;
 import android.view.Window;
@@ -21,9 +22,11 @@ public class album_view extends Activity {
 	  private List<String> bigPhoto=new ArrayList<String>();
 	  
 	  @Override
-	  public void onCreate(Bundle savedInstanceState)
-	  {
+	  public void onCreate(Bundle savedInstanceState)  {
+
+		  
 	    super.onCreate(savedInstanceState);
+
         // ******************************************* 
         // fullscreen mode 
         // ******************************************* 
@@ -41,6 +44,8 @@ public class album_view extends Activity {
 	    
 	    /* 呼叫getPhotoList()取得解析後的List */
 	    this.getPhotoList(userId,albumId);
+	    //(new ConnectTask()).doInBackground(userId,albumId);
+	    
 	    
 	    mGallery = (Gallery) findViewById(R.id.gallery);
 	    /* 設定Gallery的Adapter為自定義的PhotoAdapter 
@@ -48,49 +53,34 @@ public class album_view extends Activity {
 	    mGallery.setAdapter(new PhotoAdapter(this,bigPhoto));  
 	    /* 設定Gallery的圖片選擇事件 */
 	    mGallery.setOnItemSelectedListener(
-	        new Gallery.OnItemSelectedListener()
-	    {
+	        new Gallery.OnItemSelectedListener()  {
 	      @Override
 	      public void onItemSelected(AdapterView<?> arg0, View arg1,
-	                                 int arg2, long arg3)
-	      {
-	        try
-	        {
-	        } 
-	        catch (Exception e)
-	        {
-	          /* 發生錯誤時回傳result回上一個activity */
-	          Intent intent=new Intent();
-	          Bundle bundle = new Bundle();
-	          bundle.putString("error",""+e);
-	          intent.putExtras(bundle);
-	          /* 錯誤的回傳值設定為99 */
-	          //gallery.this.setResult(99, intent);
-	          //gallery.this.finish();
-	        } 
-	      }
-
-	      @Override
-	      public void onNothingSelected(AdapterView<?> arg0)
-	      {
-	      }     
+	                                 int arg2, long arg3)   {
+			        try{
+			        } catch (Exception e) {
+			          /* 發生錯誤時回傳result回上一個activity */
+			          Intent intent=new Intent();
+			          Bundle bundle = new Bundle();
+			          bundle.putString("error",""+e);
+			          intent.putExtras(bundle);
+			          /* 錯誤的回傳值設定為99 */
+			          //gallery.this.setResult(99, intent);
+			          //gallery.this.finish();
+			        }//end try catch
+			      }//end method
+		
+			      @Override
+			      public void onNothingSelected(AdapterView<?> arg0) {
+			      }//end method     
 	    });	    
 
         /* 以findViewById()取得Button物件，並加入onClickListener */
         ImageButton MapButton = (ImageButton) findViewById(R.id.MapButton01);
-        MapButton.setOnClickListener(new Button.OnClickListener()
-        {
-          public void onClick(View v)
-          {
-              /* new一個Intent物件，並指定要啟動的class */
-              Intent intent = new Intent();
-        	  intent.setClass(album_view.this, map_view.class);
-        	  
-        	  /* 呼叫一個新的Activity */
-        	  startActivity(intent);
-        	  /* 關閉原本的Activity */
-        	  album_view.this.finish();
-          }
+        MapButton.setOnClickListener(new Button.OnClickListener()  {
+          public void onClick(View v)   {
+        	  (new AsyncTasks(album_view.this, AsyncTasks.load_map)).execute(null);
+          }//end method
         });
         
         /* 以findViewById()取得Button物件，並加入onClickListener */
@@ -109,17 +99,20 @@ public class album_view extends Activity {
         	  album_view.this.finish();
           }
         });
+	  }//end method  
+
+
 	  
-	  }  
-	  
-	  /* 剖析XML取得相片資訊的method */
+	  /* 
+	   * 剖析XML取得相片資訊的method 
+	   * 
+	   */  
 	  private void getPhotoList(String userId,String albumId)
 	  {
 	    URL url = null;
 	    String path="http://picasaweb.google.com/data/feed/api/user/"
 	                +userId.trim()+"/albumid/"+albumId.trim();
-	    try
-	    {  
+	    try    {  
 	      url = new URL(path);
 	      /* 以自訂的PhotoHandler作為解析XML的Handler */
 	      PhotoHandler handler = new PhotoHandler(); 
@@ -128,9 +121,7 @@ public class album_view extends Activity {
 	      
 	      /* 取得照片路徑(288) */
 	      bigPhoto =handler.getBigPhoto();
-	    }
-	    catch (Exception e)
-	    { 
+	    }   catch (Exception e)   { 
 	      /* 發生錯誤時回傳result回上一個activity */
 	      Intent intent=new Intent();
 	      Bundle bundle = new Bundle();
@@ -140,6 +131,69 @@ public class album_view extends Activity {
 	      //gallery.this.setResult(99, intent);
 	      //gallery.this.finish();
 	    }
-	  }
+	  }//end method
+	  
+	  private class ConnectTask extends AsyncTask<String, Integer, Integer> {
+          ProgressDialog progressDlg;
+		  @Override
+		  protected void onPreExecute() {
+			  progressDlg = new ProgressDialog(album_view.this);
+			  progressDlg.setMessage("Preparing to load...");			  
+			  progressDlg.setIndeterminate(true);
+			  progressDlg.setCancelable(false);
+			  progressDlg.show();
+		  }//end method
+		  
+		  @Override
+		  protected void onProgressUpdate(Integer... progress) {
+			  switch (progress[0]) {
+			  
+			  }//end switch
 
-}
+
+		  }//end method
+
+		  @Override
+		  protected void onPostExecute(Integer result) {			  
+			  progressDlg.dismiss();
+		  }//end method
+		  @Override
+		  protected Integer doInBackground(String... params) {
+			  publishProgress(0);
+			  if (params.length != 2) {
+				  return -1; //invalid # of arguments
+			  }//end if
+
+			  /* 剖析XML取得相片資訊的method */
+			  String userId = params[0];
+			  String albumId = params[1];
+
+			    URL url = null;
+			    String path="http://picasaweb.google.com/data/feed/api/user/"
+			                +userId.trim()+"/albumid/"+albumId.trim();
+			    try  {  
+			      url = new URL(path);
+			      /* 以自訂的PhotoHandler作為解析XML的Handler */
+			      PhotoHandler handler = new PhotoHandler(); 
+			      Xml.parse(url.openConnection().getInputStream(),
+			                Xml.Encoding.UTF_8,handler);
+			      
+			      /* 取得照片路徑(288) */
+			      bigPhoto =handler.getBigPhoto();
+				}  catch (Exception e)  { 
+					/* 發生錯誤時回傳result回上一個activity */
+					Intent intent=new Intent();
+					Bundle bundle = new Bundle();
+					bundle.putString("error",""+e);
+					intent.putExtras(bundle);
+					/* 錯誤的回傳值設定為99 */
+					//gallery.this.setResult(99, intent);
+					//gallery.this.finish();
+					return 0;//error
+				}//end try catch
+				  publishProgress(1);
+				  return 1;//success
+		  }//end method
+	  }//end private class
+
+}//end class

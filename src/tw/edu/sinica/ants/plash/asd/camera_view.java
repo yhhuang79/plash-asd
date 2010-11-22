@@ -156,14 +156,7 @@ public class camera_view extends Activity {
         {
           public void onClick(View v)
           {
-            /* new一個Intent物件，並指定要啟動的class */
-            Intent intent = new Intent();
-        	  intent.setClass(camera_view.this, album_view.class);
-        	  
-        	  /* 呼叫一個新的Activity */
-        	  startActivity(intent);
-        	  /* 關閉原本的Activity */
-        	  camera_view.this.finish();
+        	  (new AsyncTasks(camera_view.this, AsyncTasks.load_album)).execute(null);
           }
         });      
     }

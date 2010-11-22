@@ -20,8 +20,11 @@ import org.anddev.andengine.opengl.texture.region.TextureRegionFactory;
 import org.anddev.andengine.opengl.texture.region.TiledTextureRegion;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.view.MotionEvent;
+import android.os.AsyncTask;
+import android.view.*;
+
 
 public class opening extends BaseGameActivity implements IOnSceneTouchListener {	
 	// ===========================================================
@@ -46,6 +49,8 @@ public class opening extends BaseGameActivity implements IOnSceneTouchListener {
 	private TextureRegion mParallaxLayerBack;
 	private TextureRegion mParallaxLayerMid;
 	private TextureRegion mParallaxLayerFront;
+	
+	private ProgressDialog progressDlg;
 
 	// ===========================================================
 	// Constructors
@@ -122,23 +127,52 @@ public class opening extends BaseGameActivity implements IOnSceneTouchListener {
 	@Override
 	public boolean onSceneTouchEvent(final Scene pScene, final TouchEvent pSceneTouchEvent) {
 		if(pSceneTouchEvent.getAction() == MotionEvent.ACTION_DOWN) {
-            /* new一個Intent物件，並指定要啟動的class */
-            Intent intent = new Intent();
-        	  intent.setClass(opening.this, map_view.class);
-        	  
-        	  /* 呼叫一個新的Activity */
-        	  startActivity(intent);
-        	  /* 關閉原本的Activity */
-        	  opening.this.finish();
-		}
+			(new AsyncTasks(this, AsyncTasks.load_map_from_opening)).execute(null);
+			//(new StartAlbumViewTask()).execute();
+		}//end if
 		return false;
-	}
+	}//end listener
 
-	// ===========================================================
-	// Methods
-	// ===========================================================
+	/*
+	 * Asynchronous task class that handles activity loading
+	 */
+	private class StartAlbumViewTask extends AsyncTask<Void, Integer, Integer> {
+		  
+	
+	      
+		public StartAlbumViewTask() {
+		  
+		}//end constructor
+	  
+		@Override
+		protected void onPreExecute() {
+			
+		}//end method
+	  
+		@Override
+		protected void onProgressUpdate(Integer... progress) {
+			
 
-	// ===========================================================
-	// Inner and Anonymous Classes
-	// ===========================================================
-}
+	
+		}//end method
+	
+	    @Override
+	    protected void onPostExecute(Integer result) {	
+			opening.this.finish();
+			progressDlg.dismiss();
+	    }//end method
+	  
+	    @Override
+	    protected Integer doInBackground(Void... params) {
+	
+	
+			  onProgressUpdate(0);
+			  Intent intent = new Intent();			  
+			  intent.setClass(opening.this, map_view.class);      	  
+			  startActivity(intent);
+		  
+		  
+			  return 1;//success
+	    }//end method
+	  }//end private class
+}//end class

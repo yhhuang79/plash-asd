@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    	android:orientation="horizontal"
+    	android:layout_width="fill_parent"
+    	android:layout_height="fill_parent"
+    	>
+	    <TextView 
+    		android:layout_width="wrap_content" 
+    		android:layout_height="wrap_content" 
+    		android:text="@string/login_id"
+    		android:textSize="18sp"     	 
+    		android:id="@+id/textView1">
+    	</TextView>
+		<EditText
+ 			android:layout_height="36sp"  
+ 			android:id="@+id/id" 
+ 			android:layout_width="180px" 
+ 			android:textSize="18sp" 
+ 			android:layout_gravity="center">
+		</EditText>
+	</LinearLayout>
+	    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    	android:orientation="horizontal"
+    	android:layout_width="fill_parent"
+    	android:layout_height="fill_parent"
+    	>    
+    	<TextView 
+    		android:layout_width="wrap_content" 
+    		android:layout_height="wrap_content" 
+    		android:text="@string/login_password"
+    		android:textSize="18sp"     	 
+    		android:id="@+id/textView2">
+    	</TextView>
+		<EditText
+ 			android:layout_height="36sp"  
+ 			android:id="@+id/passwordbox" 
+ 			android:inputType="textPassword" 
+ 			android:layout_width="180px" 
+ 			android:textSize="18sp" 
+ 			android:layout_gravity="center">
+		</EditText>
+	</LinearLayout>
+</LinearLayout>

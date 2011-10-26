@@ -1,5 +1,9 @@
 package tw.edu.sinica.ants.plash.asd;
 
+import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.anddev.andengine.engine.Engine;
 import org.anddev.andengine.engine.camera.Camera;
 import org.anddev.andengine.engine.options.EngineOptions;
@@ -19,12 +23,29 @@ import org.anddev.andengine.opengl.texture.region.TextureRegion;
 import org.anddev.andengine.opengl.texture.region.TextureRegionFactory;
 import org.anddev.andengine.opengl.texture.region.TiledTextureRegion;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.view.*;
-
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class opening extends BaseGameActivity implements IOnSceneTouchListener {	
 	// ===========================================================
@@ -49,8 +70,6 @@ public class opening extends BaseGameActivity implements IOnSceneTouchListener {
 	private TextureRegion mParallaxLayerBack;
 	private TextureRegion mParallaxLayerMid;
 	private TextureRegion mParallaxLayerFront;
-	
-	private ProgressDialog progressDlg;
 
 	// ===========================================================
 	// Constructors
@@ -127,52 +146,135 @@ public class opening extends BaseGameActivity implements IOnSceneTouchListener {
 	@Override
 	public boolean onSceneTouchEvent(final Scene pScene, final TouchEvent pSceneTouchEvent) {
 		if(pSceneTouchEvent.getAction() == MotionEvent.ACTION_DOWN) {
-			(new AsyncTasks(this, AsyncTasks.load_map_from_opening)).execute(null);
-			//(new StartAlbumViewTask()).execute();
-		}//end if
+
+            LayoutInflater inflater = LayoutInflater.from(opening.this);
+            View login = inflater.inflate(R.layout.login,null);
+            final EditText passwordbox=(EditText)login.findViewById(R.id.passwordbox);
+            final EditText idbox=(EditText)login.findViewById(R.id.id);
+            
+	        new AlertDialog.Builder(this)
+	        .setTitle("登入ASD 2011")
+	        .setMessage("請輸入帳號密碼")
+	        .setPositiveButton("OK", new OnClickListener() {
+	            public void onClick(DialogInterface dialog, int which) {							
+
+	                String id = idbox.getText().toString();
+	                String password = passwordbox.getText().toString();
+	                int sid = login(id,password);
+	                if(sid != -1){
+	                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+	                    SharedPreferences.Editor editor = preferences.edit();
+	                    editor.putString("id", id);
+	                    editor.putInt("sid", sid);
+	                    editor.putString("password", password);
+	                    
+	                    
+	                    editor.commit();    
+
+	                    Intent ServiceIntent = new Intent(opening.this, tw.edu.sinica.ants.plash.asd.LocationService.class);
+	                    opening.this.startService(ServiceIntent);
+	                	// new一個Intent物件，並指定要啟動的class
+	                	Intent intent = new Intent();
+	                	intent.setClass(opening.this, MapExplorer.class); 
+	            	
+	          	  		//Bundle bundle = new Bundle();
+	          	  		//bundle.putString("id", id);
+	          	  		//bundle.putString("password", password);
+	        	  
+	          	  		//intent.putExtras(bundle);
+	                	
+	          	  		// 呼叫一個新的Activity
+	          	  		startActivity(intent);
+	          	  		// 關閉原本的Activity
+	          	  		opening.this.finish();
+	                }	                
+	            }
+	        })
+	        // 設定EditText
+	        .setView(login)
+	        .create()
+	        .show();			
+		}
 		return false;
-	}//end listener
+	}
+	
+    public int login(String username, String password){
+		//set host name and action type
+		String deviceType = "phone";
+		String location = null;
+		
+		String host = GetHostAddress.hostAddress();
+		
+		if (username.equalsIgnoreCase("")||password.equalsIgnoreCase("")){
+			return -1;
+		}
+		
+		//Danny: 4/20/2011
+		//Mule Structure 
+		String action = "Login?";
+		String temp1 = "username="+username;
+		String temp2 = "&password="+password;
+		//Device type = phone or browser
+		String temp3 = "&deviceType="+deviceType;
+		String parameter = temp1+temp2+temp3;
+		
+		location = host+action+parameter;
+		
+		System.out.println(location);
+		
+		String results = null;
+		
+//		URL url = null;
+//		
+//		try {
+//			url = new URL(location);						
+//		}catch(MalformedURLException  e){  
+//		
+//		}//end try
+		
+		if (location != null){
+			try{
+				
+				if (!PLASHConnectionManager.isNetworkAvailable()){
+					Log.d("Danny: enter here @LoginAndroid -----------------> ", location);					
+				}
+				else {
+				
+					//----------------------------------------------//
+					//Danny: 4/25/2011
+					JSONObject j = PLASHConnectionManager.httpsGet(location);
+					
+					if(j == null){ //DO NOT PROCEED IF CONNECTION FAILED
+						return -1;
+					}//fi
+					String inputLine = j.getString("message");
+					//----------------------------------------------//
+					
+					results+="\n" + inputLine;
+					//lblInformation.setText(results);
+					
+					//"Account is not activated!"
+					if (inputLine.equals("Inactivate")){
+					} else if (inputLine.equals("Login Fail")){ //"Username and Password do not match!"
+					}else if (inputLine.contains("Successful Login:")){	//Successful Login		
+						
+						//Danny: 4/20/2011
+						String userID = j.getString("sid");
 
-	/*
-	 * Asynchronous task class that handles activity loading
-	 */
-	private class StartAlbumViewTask extends AsyncTask<Void, Integer, Integer> {
-		  
-	
-	      
-		public StartAlbumViewTask() {
-		  
-		}//end constructor
-	  
-		@Override
-		protected void onPreExecute() {
-			
-		}//end method
-	  
-		@Override
-		protected void onProgressUpdate(Integer... progress) {
-			
-
-	
-		}//end method
-	
-	    @Override
-	    protected void onPostExecute(Integer result) {	
-			opening.this.finish();
-			progressDlg.dismiss();
-	    }//end method
-	  
-	    @Override
-	    protected Integer doInBackground(Void... params) {
-	
-	
-			  onProgressUpdate(0);
-			  Intent intent = new Intent();			  
-			  intent.setClass(opening.this, map_view.class);      	  
-			  startActivity(intent);
-		  
-		  
-			  return 1;//success
-	    }//end method
-	  }//end private class
-}//end class
+						return Integer.parseInt(userID.toString());
+						
+						
+						}//fi
+				}
+			}catch (JSONException e) {
+				return -1;
+			} catch (NullDataException e) {//DO NOT PROCEED IF CONNECTION FAILED
+				return -1;
+								
+			}//end try catch
+		}else{
+		
+		}//end if
+		return -1;
+    }
+}

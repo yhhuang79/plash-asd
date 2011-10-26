@@ -4,5 +4,9 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="lib" path="lib/andengine.jar"/>
+	<classpathentry kind="src" path="DroidAR_src"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/gdx"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/gdx-backend-android"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/model-loaders"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -12,16 +12,22 @@ public class PhotoHandler extends DefaultHandler
   private int thumbnailNum=0;
   private List<String> list1;
   private List<String> list2;
+  private List<String> list3;
   
   /* 回傳解析度72的相片資訊 */
   public List<String> getSmallPhoto()
   { 
     return list1;
   }
+  /* 回傳解析度144的相片資訊 */
+  public List<String> getMidPhoto()
+  { 
+    return list2;
+  }  
   /* 回傳解析度288的相片資訊 */
   public List<String> getBigPhoto()
   { 
-    return list2;
+    return list3;
   }
 
   /* XML文件開始解析時呼叫此method */
@@ -30,6 +36,7 @@ public class PhotoHandler extends DefaultHandler
   { 
     list1 = new ArrayList<String>();
     list2 = new ArrayList<String>();
+    list3 = new ArrayList<String>();
   } 
   /* XML文件結束解析時呼叫此method */
   @Override 
@@ -49,10 +56,15 @@ public class PhotoHandler extends DefaultHandler
         /* 將第一筆url(解析度72的相片連結)寫入list1 */
         list1.add(atts.getValue("url"));
       }
-      else if(thumbnailNum==2)
+      else if(thumbnailNum==1)
       {
         /* 將第三筆url(解析度288的相片連結)寫入list2 */
         list2.add(atts.getValue("url"));
+      }      
+      else if(thumbnailNum==2)
+      {
+        /* 將第三筆url(解析度288的相片連結)寫入list2 */
+        list3.add(atts.getValue("url"));
       }
       thumbnailNum++;
     }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+  	<LinearLayout android:id="@+id/IconMenuBar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:paddingLeft="0px" android:paddingTop="0px">
+		<ImageButton android:id="@+id/MapExplorerBtn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/map_explorer_f"></ImageButton>	
+		<ImageButton android:id="@+id/ARExplorerBtn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/ar_explorer_f"></ImageButton>
+		<ImageButton android:id="@+id/FriendFinderBtn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/friend_finder_f"></ImageButton>
+		<ImageButton android:id="@+id/ASDGalleryBtn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/asd_gallery_b"></ImageButton>
+		<ImageButton android:id="@+id/ASDGuidanceBtn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/asd_guidance_f"></ImageButton>	
+	</LinearLayout>
+	<FrameLayout android:id="@+id/AlbumLayout" android:layout_width="fill_parent" android:layout_height="fill_parent">
+	  	<RelativeLayout android:id="@+id/photoview" android:layout_width="fill_parent" android:layout_height="fill_parent" android:paddingLeft="20px" android:paddingTop="20px">
+   		<ImageSwitcher 
+    		android:id="@+id/switcher"
+    		android:layout_width="fill_parent"
+    		android:layout_height="280px"
+    		android:gravity="center_vertical"/>    
+  		<Gallery 
+    		android:id="@+id/gallery"
+    		android:layout_width="fill_parent"
+   			android:layout_height="wrap_content"
+    		android:spacing="16dp"
+    		android:layout_below="@+id/switcher"
+  			android:gravity="center_vertical" android:paddingTop="10px"/>
+  		</RelativeLayout>	
+  		<ImageView android:layout_width="wrap_content" android:id="@+id/imageView1" android:layout_height="wrap_content" android:background="@drawable/asdbanner" android:layout_gravity="bottom"></ImageView>
+    </FrameLayout>
+</LinearLayout>

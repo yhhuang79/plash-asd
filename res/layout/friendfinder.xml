@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+   
+  	<LinearLayout android:id="@+id/IconMenuBar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:paddingLeft="0px" android:paddingTop="0px">
+		<ImageButton android:id="@+id/MapExplorerBtn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/map_explorer_f"></ImageButton>	
+		<ImageButton android:id="@+id/ARExplorerBtn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/ar_explorer_f"></ImageButton>
+		<ImageButton android:id="@+id/FriendFinderBtn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/friend_finder_b"></ImageButton>
+		<ImageButton android:id="@+id/ASDGalleryBtn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/asd_gallery_f"></ImageButton>
+		<ImageButton android:id="@+id/ASDGuidanceBtn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/asd_guidance_f"></ImageButton>	
+	</LinearLayout>
+    <FrameLayout android:id="@+id/BannerBar" android:layout_width="fill_parent" android:layout_height="fill_parent" android:paddingLeft="0px" android:paddingTop="0px" android:orientation="vertical">
+ 		<WebView 
+   			android:id="@+id/myWebView1" 
+   			android:layout_height="fill_parent" 
+   			android:layout_width="fill_parent" 
+   			android:background="#7F23D7" 
+   			android:focusable="false"/>
+  		<ImageView android:layout_width="wrap_content" android:id="@+id/imageView1" android:layout_height="wrap_content" android:background="@drawable/asdbanner" android:layout_gravity="bottom"></ImageView>
+  	</FrameLayout> 
+</LinearLayout>

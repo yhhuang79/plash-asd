@@ -1,6 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hello">Hello World, MapView!</string>
-    <string name="app_name">Academia Sinica Discovery</string>
+    <string name="app_name">Academia Sinica Discovery 2011</string>
     <string name="str_message">無法取得Location!</string>
+    <string name="login_id">帳號：</string>
+    <string name="login_password">密碼：</string>
+    <string name="guidance_rules">
+		::::::ASD遊戲闖關五步驟::::::::::::\n\n
+		1.在PLASH攤位拍攝闖關大頭照，然後從資訊所出發\n\n
+		2.施展螢幕手勢魔法，將途中出現的怪獸打敗，並取得打怪寶物\n\n
+		3.在十個預設的地標中，尋得其中\"三棟\"地標，並與該地標門口合照\n\n
+		4.回到資訊所，與超巨大AR資訊所寶寶合照\n\n
+		5.回到PLASH攤位，領取精美禮物\n
+	</string>
+	<string name="guidance_functions">
+		::::::ASD系統支援功能::::::::::::\n\n
+		★Map Explorer\n
+			提供地圖探索模式(地圖模式、夥伴位置、地標旗幟)\n\n
+		★AR Explorer\n
+			提供實境探索模式(實境模式、拍照功能、怪獸機制、雷達導引、處所簡介)\n\n
+		★Friends Finder\n
+			提供夥伴推薦資訊(依照收集寶物的不同與探索軌跡將推薦興趣相同的闖關夥伴)\n\n
+		★ASD Gallery\n
+			提供活動相簿分享\n\n
+		★ASD Guidance\n
+			提供本系統功能與遊戲闖關步驟說明\n
+	</string>
+	<string name="guidance_buildings">
+		\n\n::::::ASD遊戲隱藏地標::::::::::::\n\n
+		生物多樣性研究中心\n
+		生物化學研究所\n
+		行政大樓(家驊館、計算中心)\n
+		郵局、車庫、員工福利社\n
+		學術活動中心\n
+		綜合體育館\n
+		資訊科學研究所\n
+		胡適紀念館\n
+		歷史語言研究所\n
+		嶺南美術館\n
+	</string>
+	<string name="guidance_gestures">
+		::::::ASD打怪手勢說明::::::::::::\n\n
+		請在螢幕上畫出下列手勢(任選一種)，以施展攻擊魔法，打敗怪獸 : 直線揮劍、五星陣列、無限魔法。  \n
+	</string>
+	<string name="guidance_webs">
+		::::::ASD活動相關網站::::::::::::\n\n
+		★ASD-FB活動網站\n
+			http:// \n\n
+		★ASD-闖關者追蹤網站\n
+			http:// \n\n
+		★ASD-夥伴推薦網站\n
+			http:// \n\n
+
+		★PLASH-專案計畫網站\n
+			http://ants.iis.sinica.edu.tw/plash/ \n\n
+
+		★PLASH-Map\'n Track friends網站\n
+			http://plash.iis.sinica.edu.tw/plash/*.action \n\n
+	</string>
 </resources>

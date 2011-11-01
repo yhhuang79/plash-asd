@@ -102,7 +102,7 @@ public class MapExplorer extends MapActivity {
 	    zoomLevel = 17; 
 	    mMapController.setZoom(zoomLevel); 
 	    
-        /*開啟Zoomlevel button*/
+        // 開啟Zoomlevel button
         mMapView.setBuiltInZoomControls(true);
         
 	    /* Provider初始化 */

@@ -98,7 +98,7 @@ public class MapExplorer extends MapActivity {
 	    mMapView = (MapView)findViewById(R.id.myMapView1); 
 	    mMapController = mMapView.getController();
 
-	    /* 設定預設的放大層級 */
+	    // 設定預設的放大層級 
 	    zoomLevel = 17; 
 	    mMapController.setZoom(zoomLevel); 
 	    

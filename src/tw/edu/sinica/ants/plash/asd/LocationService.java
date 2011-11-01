@@ -39,11 +39,11 @@ public class LocationService extends Service implements LocationListener{
 		cmdReceiver = new CommandReceiver();
 		mManager =(LocationManager)getSystemService(LOCATION_SERVICE);
 		
-        SharedPreferences sp;
-        sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());                
+        //SharedPreferences sp;
+        //sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());                
         
-        id = sp.getString("id", "");
-        password =sp.getString("password", "");
+        //id = sp.getString("id", "");
+        //password = sp.getString("password", "");
         
 		super.onCreate();
 	}
@@ -59,23 +59,13 @@ public class LocationService extends Service implements LocationListener{
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("tw.edu.sinica.ants.plash.asd.LocationService");
 		registerReceiver(cmdReceiver, filter);
-        String provider;
-        provider = mManager.getBestProvider(new Criteria(), true);
-        if (provider == null) {
-            // ⊿Τㄑ眔竚戈癟矗ㄑ
-            // ㄒ⊿ΤWifi⊿硈3G单单
-        }
-        mManager.requestLocationUpdates(provider, 5000, 5, this);
-        // 眔程Μ竚戈癟
-        Location location = mManager.getLastKnownLocation(provider);
-        if (location != null) onLocationChanged(location);
-		//doJob();
+
         SharedPreferences sp;
         sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());                
         
         id = sp.getString("id", "");
         sid = sp.getInt("sid", 0);
-        password =sp.getString("password", "");
+        password = sp.getString("password", "");
         
 		String location1 = null;
 		String host = GetHostAddress.hostAddress();
@@ -94,6 +84,18 @@ public class LocationService extends Service implements LocationListener{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}//end try catch
+		
+        String provider;
+        provider = mManager.getBestProvider(new Criteria(), true);
+        if (provider == null) {
+            // ⊿Τㄑ眔竚戈癟矗ㄑ
+            // ㄒ⊿ΤWifi⊿硈3G单单
+        }
+        mManager.requestLocationUpdates(provider, 5000, 5, this);
+        // 眔程Μ竚戈癟
+        Location location = mManager.getLastKnownLocation(provider);
+        if (location != null) onLocationChanged(location);
+		//doJob();
 		return super.onStartCommand(intent, flags, startId);
 	}	
 	

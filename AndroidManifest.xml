@@ -27,15 +27,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="camera_view" 
-        	android:screenOrientation="portrait"
-			android:configChanges="orientation|keyboardHidden">
-		</activity>
-        <activity android:name="album_view"
-        	android:screenOrientation="portrait"
-			android:configChanges="orientation|keyboardHidden">
-        </activity>
-        
         <activity android:name="MapExplorer"
         	android:screenOrientation="portrait"
 			android:configChanges="orientation|keyboardHidden">

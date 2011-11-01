@@ -13,7 +13,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 public class Facebook {
-
+//testing
     public static void postMessage(String message){
     	// «Å§iºô§}¦r¦ê
     	String uriAPI = "http://plash2.iis.sinica.edu.tw/post.php?message=" + message; 

@@ -34,6 +34,7 @@ public class ModelHandler {
 	
 	private Double[] LAT;
 	private Double[] LON;
+	private Double[] rota;
 	
 	private statusList mSTATUS;
 	
@@ -45,7 +46,7 @@ public class ModelHandler {
 	private final String boardModelSuffix = "_board.dae";
 	private final String boardTextureSuffix = "_boardtexture.png";
 	
-	public ModelHandler(World world, GLCamera camera, GLRenderer renderer, Activity activity, Double[] LAT, Double[] LON){
+	public ModelHandler(World world, GLCamera camera, GLRenderer renderer, Activity activity, Double[] LAT, Double[] LON, Double[] rota){
 		this.world = world;
 		this.camera = camera;
 		this.renderer = renderer;
@@ -53,6 +54,7 @@ public class ModelHandler {
 		
 		this.LAT = LAT;
 		this.LON = LON;
+		this.rota = rota;
 		
 		mSTATUS = new statusList(LAT.length);
 		
@@ -99,6 +101,8 @@ public class ModelHandler {
 							GeoObj o = (GeoObj) items.get(j);
 							o.setComp(gdxMesh);
 							o.setMyPosition(new Vec(LON[j].floatValue(),LAT[j].floatValue(),0f));
+							o.getGraphicsComponent().scaleEqual(1.0f);
+							o.getGraphicsComponent().setRotation(new Vec(90.0f, 0f, rota[j].floatValue()));
 						}
 					};
 				}catch(OutOfMemoryError e){
@@ -126,6 +130,8 @@ public class ModelHandler {
 							GeoObj o = (GeoObj) items.get(j);
 							o.setComp(gdxMesh);
 							o.setMyPosition(new Vec(LON[ii].floatValue(),LAT[ii].floatValue(),0f));
+							o.getGraphicsComponent().scaleEqual(1.0f);
+							o.getGraphicsComponent().setRotation(new Vec(90.0f, 0f, rota[ii].floatValue()));
 						}
 					};
 				}catch(OutOfMemoryError e){

@@ -5,6 +5,7 @@
     <string name="str_message">無法取得Location!</string>
     <string name="login_id">帳號：</string>
     <string name="login_password">密碼：</string>
+    <string name="outOfMemory">糟糕，記憶體不夠用\n你的AR體驗指數下降5%!!</string>
     <string name="guidance_rules">
 		::::::ASD遊戲闖關五步驟::::::::::::\n\n
 		1.在PLASH攤位拍攝闖關大頭照，然後從資訊所出發\n\n

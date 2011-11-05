@@ -58,9 +58,9 @@ public class MapExplorer extends MapActivity {
 	private double distance=0;
 	
 	// Overlay 
-	private static int _location[] = new int[35];
-	private GeoPoint point[] = new GeoPoint[35];
-	private OverlayItem overlayitem[] = new OverlayItem[35];	
+	private static int _location[] = new int[36];
+	private GeoPoint point[] = new GeoPoint[36];
+	private OverlayItem overlayitem[] = new OverlayItem[36];	
 	private MyLocationOverlay myLocOverlay;
 	
 	//Login ¸ê®Æ

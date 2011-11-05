@@ -376,7 +376,7 @@ public class MapExplorer extends MapActivity {
 	        //updateLocation(tripID , userID, gp2.getLatitudeE6() + "",
 	        //		gp2.getLongitudeE6() + "", d.getTime() + "", 3 ); // 上傳測試用
 	        
-	        for(int i=0; i<7; i++)
+	        for(int i=0; i<35; i++)
 	        	if(GetDistance(gp2,overlayitem[i].getPoint()) < 10)
 	        		if(_location[i] < 2)_location[i] = 1;
 			PaintItemPoint();
@@ -451,7 +451,7 @@ public class MapExplorer extends MapActivity {
 		  MapItemizedOverlay greenflag_overlay = new MapItemizedOverlay(green_flag);	
     
 		  int red_noItem = 0, green_noItem = 0;
-		  for(int i=0; i<7; i++)
+		  for(int i=0; i<35; i++)
 		  {		  
 			  if(_location[i] == 1)
 			  {

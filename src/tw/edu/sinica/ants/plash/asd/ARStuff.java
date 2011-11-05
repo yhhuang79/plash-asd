@@ -166,9 +166,29 @@ public class ARStuff extends Setup {
 		//try to create all GeoObjs before entering gpsAction
 		//put all name obj first
 		for(int i = 0; i < LAT.length; i++){
-			GeoObj name = new GeoObj(LAT[i], LON[i]);
-			name.setUpdateListener(null);
-			world.add(name);
+			final int j = i;
+			
+			String modelName, textureName;
+			
+			if(i < 8){
+				modelName = genericPrefix + 0 + (i + 2) + nameModelSuffix;
+				textureName = genericPrefix + 0 + (i + 2) + nameTextureSuffix;
+			}else{
+				modelName = genericPrefix + (i + 2) + nameModelSuffix;
+				textureName = genericPrefix + (i + 2) + nameTextureSuffix;
+			}
+			
+			new ModelLoader(renderer, modelName, textureName) {
+				@Override
+				public void modelLoaded(MeshComponent gdxMesh) {
+					GeoObj name = new GeoObj(LAT[j], LON[j]);
+					name.setUpdateListener(null);
+					name.setComp(gdxMesh);
+					name.getRenderComp().scaleEqual(1.0f);
+					name.getRenderComp().setRotation(new Vec(90.0f, 0.0f, rota[j].floatValue()));
+					world.add(name);
+				}
+			};
 		}
 		//put all board obj later
 		for(int i=0; i < LAT.length; i++){
@@ -270,6 +290,12 @@ public class ARStuff extends Setup {
 		return null;  	
     }
 	
+    private final String genericPrefix = "asd_ar_";
+	private final String nameModelSuffix = "_name.dae";
+	private final String nameTextureSuffix = "_nametexture.png";
+	private final String boardModelSuffix = "_board.dae";
+	private final String boardTextureSuffix = "_boardtexture.png";
+    
 	private final String loot[] = {	"民族學研究所吉祥物",
 									"經濟研究所吉祥物",
 									"傅斯年圖書館吉祥物",

@@ -34,7 +34,11 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import commands.Command;
 import commands.CommandGroup;
@@ -136,11 +140,16 @@ public class ARStuff extends Setup {
 					 * upload result to server here
 					 * prize = {0, 1, 2, 3, ..., 36}
 					 */
-					prize(userid, prize);
-					CommandShowToast.show(myTargetActivity, "恭喜! \"" + loot[prize] + "\"已新增到你的收藏 ");
-//					GuiSetup.this.
+					String prizeImageName = "prize_";
+					if(prize < 8){
+						prizeImageName = prizeImageName + 0 + (prize+2);
+					}else{
+						prizeImageName = prizeImageName + (prize+2);
+					}
+					CommandShowToast.showWithImage(myTargetActivity, "恭喜! \"" + loot[prize] + "\"已新增到你的收藏 ", prizeImageName);
 					new Thread(new Runnable() {
 						public void run() {
+							prize(userid, prize);
 							Facebook.postMessage("恭喜!" + userid + "得到了" + loot[prize] + "!!!" );
 						}
 					}).start();

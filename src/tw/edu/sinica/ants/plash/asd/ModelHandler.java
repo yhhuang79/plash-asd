@@ -65,12 +65,12 @@ public class ModelHandler {
 	public void deleteModel(){
 		for(int i = 0; i < mSTATUS.length; i++){ //go through the list
 			//if name is not in range, but exist previously, delete its model
-			if(!mSTATUS.nameInRange[i] && mSTATUS.nameExist[i]){
+			if(mSTATUS.nameExist[i] && !mSTATUS.nameInRange[i]){
 				GeoObj o = (GeoObj) items.get(i);
 				o.getGraphicsComponent().clearChildren();
 			}
 			//same treatment for boards
-			if(!mSTATUS.boardInRange[i] && mSTATUS.boardExist[i]){
+			if(mSTATUS.boardExist[i] && !mSTATUS.boardInRange[i]){
 				GeoObj o = (GeoObj) items.get(i + mSTATUS.length);
 				o.getGraphicsComponent().clearChildren();
 			}
@@ -103,6 +103,7 @@ public class ModelHandler {
 							o.setMyPosition(new Vec(LON[j].floatValue(),LAT[j].floatValue(),0f));
 							o.getGraphicsComponent().scaleEqual(1.0f);
 							o.getGraphicsComponent().setRotation(new Vec(90.0f, 0f, rota[j].floatValue()));
+Log.e("load", "id:" + j);
 						}
 					};
 				}catch(OutOfMemoryError e){
@@ -132,6 +133,7 @@ public class ModelHandler {
 							o.setMyPosition(new Vec(LON[ii].floatValue(),LAT[ii].floatValue(),0f));
 							o.getGraphicsComponent().scaleEqual(1.0f);
 							o.getGraphicsComponent().setRotation(new Vec(90.0f, 0f, rota[ii].floatValue()));
+Log.e("load", "id:" + j);
 						}
 					};
 				}catch(OutOfMemoryError e){

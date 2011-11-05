@@ -82,6 +82,7 @@ public class ModelHandler {
 			String modelName = "";
 			String textureName = "";
 			//if name is not in range, but exist previously, delete its model
+Log.e("booleans", "nameinrange:" + mSTATUS.nameInRange[i] + " ,exist:" + mSTATUS.nameExist[i]);
 			if(mSTATUS.nameInRange[i] && !mSTATUS.nameExist[i]){
 				
 				final int j = i; //for referencing in the modelLoader method
@@ -100,7 +101,7 @@ public class ModelHandler {
 						public void modelLoaded(MeshComponent gdxMesh) {
 							GeoObj o = (GeoObj) items.get(j);
 							o.setComp(gdxMesh);
-							o.setMyPosition(new Vec(LON[j].floatValue(),LAT[j].floatValue(),0f));
+							o.setMyPosition(new Vec(LON[j].floatValue(),LAT[j].floatValue(),100f));
 							o.getGraphicsComponent().scaleEqual(1.0f);
 							o.getGraphicsComponent().setRotation(new Vec(90.0f, 0f, rota[j].floatValue()));
 Log.e("load", "id:" + j);
@@ -111,6 +112,8 @@ Log.e("load", "id:" + j);
 					CommandShowToast.show(activity, activity.getResources().getString(R.string.outOfMemory));
 				}
 			}
+			
+Log.e("booleans", "boardinrange:" + mSTATUS.boardInRange[i] + " ,exist:" + mSTATUS.boardExist[i]);
 			//same treatment for boards
 			if(mSTATUS.boardInRange[i] && !mSTATUS.boardExist[i]){
 				final int ii = i;

@@ -377,7 +377,7 @@ public class MapExplorer extends MapActivity {
 	        //		gp2.getLongitudeE6() + "", d.getTime() + "", 3 ); // 上傳測試用
 	        
 	        for(int i=0; i<35; i++)
-	        	if(GetDistance(gp2,overlayitem[i].getPoint()) < 10)
+	        	if(GetDistance(gp2,overlayitem[i].getPoint()) < 40)
 	        		if(_location[i] < 2)_location[i] = 1;
 			PaintItemPoint();
 	        gp1=gp2;
